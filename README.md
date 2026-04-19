@@ -1,4 +1,4 @@
-# (MDFlow)[https://uxle.github.io/md/]: Comprehensive Test Document
+# [MDFlow](https://uxle.github.io/md/): Comprehensive Test Document
 
 Welcome to the MDFlow sample document. This file is specifically designed to test all typographic elements, layouts, and print-specific CSS rules (like smart pagination) within the MDFlow environment.
 
