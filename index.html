@@ -1,0 +1,65 @@
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MDFlow | MD to PDF Builder</title>
+<!-- External Libraries -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<!-- Local Stylesheet -->
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body class="mode-edit">
+<header class="header">
+    <div class="brand">
+        <i class="fa-brands fa-markdown"></i>
+        <span class="brand-text">MDFlow</span>
+    </div>
+
+    <div class="view-switch">
+        <button class="view-btn active" data-view="edit" aria-label="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+        <button class="view-btn" data-view="preview" aria-label="Preview"><i class="fa-solid fa-eye"></i></button>
+    </div>
+
+    <div class="controls">
+        <button class="icon-btn" id="btn-load" title="Open Markdown File (Ctrl+O)">
+            <i class="fa-solid fa-folder-open"></i>
+        </button>
+        <button class="icon-btn" id="btn-save" title="Save Markdown File (Ctrl+S)">
+            <i class="fa-solid fa-floppy-disk"></i>
+        </button>
+        
+        <div style="width: 1px; height: 24px; background: var(--color-border); margin: 0 4px;"></div>
+
+        <button class="icon-btn" id="btn-theme" title="Toggle Dark Mode">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="icon-btn primary" id="btn-pdf" title="Download PDF">
+            <i class="fa-solid fa-download"></i>
+            <span>Export PDF</span>
+        </button>
+    </div>
+</header>
+
+<div class="workspace">
+    <aside class="editor">
+        <textarea id="md-editor" placeholder="Start typing your Markdown here...&#10;&#10;# Heading 1&#10;## Heading 2&#10;&#10;- Bullet point&#10;- Bullet point&#10;&#10;**Bold text** and *italic text*." spellcheck="false"></textarea>
+    </aside>
+    <main class="preview">
+        <div id="pdf-target" class="markdown-paper"></div>
+    </main>
+</div>
+
+<!-- Toast Notification & Hidden File Input -->
+<div id="toast" class="toast"></div>
+<input type="file" id="file-input" style="display: none;" accept=".md,.txt">
+
+<!-- Local Script -->
+<script src="script.js"></script>
+
+</body>
+</html>

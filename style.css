@@ -1,0 +1,502 @@
+/* =============================================================================
+   SECTION 1. SETTINGS & DESIGN TOKENS (PRODUCTION UPGRADE)
+   ============================================================================= */
+:root {
+    /* Color Palette */
+    --slate-50: #f8fafc; --slate-100: #f1f5f9; --slate-200: #e2e8f0; --slate-300: #cbd5e1;
+    --slate-400: #94a3b8; --slate-500: #64748b; --slate-600: #475569; --slate-700: #334155;
+    --slate-800: #1e293b; --slate-900: #0f172a; --slate-950: #020617;
+    
+    --blue-50: #eff6ff; --blue-400: #60a5fa; --blue-500: #3b82f6; --blue-600: #2563eb; --blue-700: #1d4ed8;
+
+    /* Semantic UI Variables */
+    --color-bg-app: var(--slate-50);
+    --color-bg-panel: #ffffff;
+    --color-bg-input: var(--slate-100);
+    --color-border: var(--slate-200);
+    --color-border-hov: var(--slate-300);
+    --color-text-main: var(--slate-900);
+    --color-text-body: var(--slate-600);
+    --color-text-mute: var(--slate-400);
+    --color-primary: var(--blue-600);
+    --color-primary-hov: var(--blue-700);
+    --color-primary-ring: rgba(37, 99, 235, 0.18);
+    
+    /* Markdown Specific */
+    --md-code-bg: var(--slate-100);
+    --md-quote-bg: var(--slate-50);
+    --md-quote-border: var(--color-primary);
+    --md-table-border: var(--slate-200);
+    --md-table-head: var(--slate-50);
+
+    /* Typography */
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+    /* Layout & Dimensions */
+    --header-h: 64px;
+    --sidebar-w: clamp(320px, 40vw, 600px);
+    --a4-w: 210mm;
+    --a4-h: 297mm;
+    --a4-margin: 20mm;
+
+    /* Elevation & Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.06);
+    --shadow-xl: 0 10px 40px -10px rgba(0,0,0,0.08);
+    
+    /* Motion */
+    --dur-fast: 150ms; --dur-norm: 250ms; --ease-out: cubic-bezier(0, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+    --color-bg-app: var(--slate-950);
+    --color-bg-panel: var(--slate-900);
+    --color-bg-input: var(--slate-800);
+    --color-border: var(--slate-800);
+    --color-border-hov: var(--slate-700);
+    --color-text-main: var(--slate-50);
+    --color-text-body: var(--slate-300);
+    --color-text-mute: var(--slate-500);
+    --color-primary: var(--blue-500);
+    --color-primary-hov: var(--blue-400);
+    --color-primary-ring: rgba(59, 130, 246, 0.3);
+    
+    --md-code-bg: var(--slate-800);
+    --md-quote-bg: rgba(59, 130, 246, 0.05);
+    --md-table-border: var(--slate-700);
+    --md-table-head: var(--slate-800);
+    
+    --shadow-xl: 0 10px 40px -10px rgba(0,0,0,0.5);
+}
+
+/* =============================================================================
+   SECTION 2. BASE RESET & ACCESSIBILITY
+   ============================================================================= */
+*, *::before, *::after { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+    font-size: 16px;
+    height: 100%;
+}
+
+body {
+    height: 100dvh; 
+    width: 100vw;
+    overflow: hidden; 
+    font-family: var(--font-sans);
+    background-color: var(--color-bg-app);
+    color: var(--color-text-main);
+    transition: background-color var(--dur-norm) var(--ease-out), color var(--dur-norm);
+}
+
+button {
+    background: none; border: none; color: inherit; cursor: pointer;
+    font-family: inherit; font-size: inherit; 
+    transition: all var(--dur-fast) var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible, a:focus-visible, textarea:focus-visible { 
+    outline: 2px solid var(--color-primary); 
+    outline-offset: 2px; 
+}
+
+::selection {
+    background: var(--color-primary-ring);
+    color: inherit;
+}
+
+/* =============================================================================
+   SECTION 3. LAYOUT STRUCTURE (FLEXBOX OVERHAUL)
+   ============================================================================= */
+.header {
+    height: var(--header-h); 
+    width: 100%;
+    background: var(--color-bg-panel);
+    box-shadow: 0 1px 0 0 var(--color-border);
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    padding: 0 clamp(1rem, 3vw, 2rem);
+    position: relative; 
+    z-index: 100;
+    transition: background-color var(--dur-norm), box-shadow var(--dur-norm);
+}
+
+[data-theme="dark"] .header {
+    background: var(--color-bg-panel); 
+    box-shadow: 0 1px 0 0 var(--color-border);
+}
+
+.workspace {
+    display: flex; 
+    height: calc(100dvh - var(--header-h));
+    width: 100%; 
+    overflow: hidden;
+}
+
+.editor {
+    flex: 0 0 var(--sidebar-w); 
+    width: var(--sidebar-w);
+    background: var(--color-bg-panel); 
+    box-shadow: 1px 0 0 0 var(--color-border);
+    display: flex; 
+    flex-direction: column; 
+    z-index: 50;
+    transition: background-color var(--dur-norm);
+}
+
+.editor textarea {
+    flex: 1; 
+    width: 100%; 
+    height: 100%;
+    max-width: 80ch;
+    margin: 0 auto;
+    resize: none; 
+    border: none; 
+    outline: none;
+    background: transparent; 
+    color: var(--color-text-main);
+    font-family: var(--font-mono); 
+    font-size: 0.95rem; 
+    line-height: 1.8;
+    padding: 2rem; 
+    
+    scrollbar-width: thin; 
+    scrollbar-color: var(--slate-400) transparent;
+}
+
+.editor textarea::-webkit-scrollbar { width: 8px; }
+.editor textarea::-webkit-scrollbar-track { background: transparent; }
+.editor textarea::-webkit-scrollbar-thumb { background-color: var(--slate-300); border-radius: 4px; }
+[data-theme="dark"] .editor textarea::-webkit-scrollbar-thumb { background-color: var(--slate-700); }
+
+.preview {
+    flex: 1 1 auto; 
+    height: 100%; 
+    overflow-y: auto; 
+    overflow-x: hidden;
+    background-color: var(--color-bg-app);
+    background-image: radial-gradient(var(--slate-300) 1px, transparent 1px);
+    background-size: 24px 24px;
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-start;
+    padding: clamp(1rem, 3vw, 3rem) clamp(1rem, 2vw, 2rem);
+    
+    scrollbar-width: thin;
+    scrollbar-color: var(--slate-400) transparent;
+}
+
+[data-theme="dark"] .preview { 
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); 
+}
+
+.preview::-webkit-scrollbar { width: 10px; }
+.preview::-webkit-scrollbar-track { background: transparent; }
+.preview::-webkit-scrollbar-thumb { background-color: var(--slate-300); border-radius: 5px; border: 2px solid var(--color-bg-app); }
+[data-theme="dark"] .preview::-webkit-scrollbar-thumb { background-color: var(--slate-600); }
+
+/* =============================================================================
+   SECTION 4. CONTROLS & BRANDING
+   ============================================================================= */
+.brand {
+    display: flex; align-items: center; gap: 0.875rem;
+    font-weight: 800; font-size: 1.25rem; user-select: none;
+    letter-spacing: -0.02em;
+}
+
+.brand i {
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    border-radius: 0.5rem; background: var(--color-primary); color: #fff;
+    font-size: 1.2rem; box-shadow: 0 4px 12px -2px var(--color-primary-ring);
+}
+
+.brand-text {
+    background: linear-gradient(90deg, var(--color-text-main), var(--color-text-mute));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+.controls { display: flex; align-items: center; gap: 0.5rem; }
+
+.icon-btn {
+    width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 0.5rem; color: var(--color-text-body); font-size: 1.05rem;
+    background: transparent;
+    border: 1px solid transparent; 
+    box-shadow: none;
+    will-change: transform;
+}
+.icon-btn:hover { 
+    background: var(--color-bg-input); 
+    border-color: var(--color-border); 
+    color: var(--color-text-main); 
+}
+.icon-btn:active { transform: scale(0.96); }
+
+.icon-btn.primary { 
+    background: var(--color-primary); 
+    color: #fff; 
+    border: none; 
+    padding: 0 16px; 
+    width: auto; 
+    font-weight: 600; 
+    box-shadow: 0 4px 14px -2px var(--color-primary-ring); 
+}
+.icon-btn.primary:hover { background: var(--color-primary-hov); transform: translateY(-2px); box-shadow: 0 6px 18px -3px var(--color-primary-ring); }
+.icon-btn.primary:active { transform: scale(0.96); }
+.icon-btn.primary span { margin-left: 8px; font-size: 0.9rem; }
+
+.view-switch { display: none; background: var(--color-bg-input); padding: 4px; border-radius: 99px; border: 1px solid var(--color-border); }
+.view-btn { padding: 6px 16px; border-radius: 99px; font-size: 0.875rem; font-weight: 600; color: var(--color-text-mute); }
+.view-btn.active { background: var(--color-bg-panel); color: var(--color-primary); box-shadow: var(--shadow-sm); }
+
+/* =============================================================================
+   SECTION 5. TOAST ANIMATIONS
+   ============================================================================= */
+.toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translate3d(-50%, calc(100% + 2rem), 0);
+    background-color: var(--slate-900); color: #fff; padding: 0.875rem 1.75rem;
+    border-radius: 99px; font-size: 0.875rem; font-weight: 600; box-shadow: var(--shadow-xl);
+    z-index: 1000; opacity: 0; pointer-events: none;
+    transition: transform var(--dur-norm) var(--ease-out), opacity var(--dur-norm) var(--ease-out);
+    text-align: center; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translate3d(-50%, 0, 0); }
+[data-theme="dark"] .toast { background-color: var(--slate-100); color: var(--slate-900); }
+
+/* =============================================================================
+   SECTION 6. MARKDOWN PAPER (A4 VECTOR-READY PREVIEW)
+   ============================================================================= */
+.markdown-paper {
+    width: var(--a4-w); 
+    min-height: var(--a4-h);
+    background-color: #ffffff; 
+    padding: var(--a4-margin); 
+    margin: 0 auto 2rem;
+    box-shadow: var(--shadow-xl); 
+    border-radius: 4px; 
+    position: relative;
+    transform-origin: top center; 
+    transition: transform var(--dur-norm) var(--ease-out);
+    
+    font-family: var(--font-sans);
+    font-size: 15px; 
+    line-height: 1.65; 
+    color: #0f172a; 
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.markdown-paper:empty::before {
+    content: 'Start typing to see your document...';
+    color: var(--color-text-mute);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-style: italic;
+}
+
+/* Headings */
+.markdown-paper h1, .markdown-paper h2, .markdown-paper h3, .markdown-paper h4, .markdown-paper h5 {
+    color: #020617; 
+    margin-top: 1.75em; 
+    margin-bottom: 0.75em; 
+    font-weight: 700; 
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+.markdown-paper h1 { font-size: 2.25em; border-bottom: 2px solid var(--slate-200); padding-bottom: 0.3em; margin-top: 0; font-weight: 800; }
+.markdown-paper h2 { font-size: 1.75em; border-bottom: 1px solid var(--slate-200); padding-bottom: 0.3em; }
+.markdown-paper h3 { font-size: 1.4em; }
+.markdown-paper h4 { font-size: 1.15em; }
+
+/* Blocks */
+.markdown-paper p { margin-bottom: 1.25em; }
+.markdown-paper strong { font-weight: 700; color: #000; }
+.markdown-paper ul, .markdown-paper ol { margin-bottom: 1.25em; padding-left: 2em; }
+.markdown-paper li { margin-bottom: 0.35em; }
+
+.markdown-paper blockquote {
+    border-left: 4px solid var(--md-quote-border); 
+    padding: 0.75em 1.25em;
+    color: var(--slate-700); 
+    font-style: italic; 
+    margin: 1.5em 0; 
+    background: var(--md-quote-bg); 
+    border-radius: 0 4px 4px 0;
+}
+
+/* Code */
+.markdown-paper code {
+    font-family: var(--font-mono); 
+    font-size: 0.85em;
+    background-color: var(--md-code-bg); 
+    padding: 0.2em 0.4em; 
+    border-radius: 4px; 
+    color: #b91c1c; 
+}
+
+.markdown-paper pre {
+    background-color: #0f172a; 
+    color: #f8fafc; 
+    padding: 1.25em; 
+    border-radius: 6px;
+    overflow-x: auto; 
+    margin-bottom: 1.5em;
+    line-height: 1.5;
+}
+.markdown-paper pre code { background: transparent; color: inherit; padding: 0; font-size: 0.85em; border-radius: 0; }
+
+/* Tables & Media */
+.markdown-paper a { color: var(--color-primary); text-decoration: none; font-weight: 500; }
+.markdown-paper a:hover { text-decoration: underline; }
+
+.markdown-paper table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-bottom: 1.5em; 
+    font-size: 0.95em;
+}
+.markdown-paper th, .markdown-paper td { 
+    border: 1px solid var(--md-table-border); 
+    padding: 10px 12px; 
+    text-align: left; 
+}
+.markdown-paper th { 
+    background-color: var(--md-table-head); 
+    font-weight: 600; 
+}
+.markdown-paper img { max-width: 100%; height: auto; border-radius: 6px; display: block; margin: 1.5em 0; }
+.markdown-paper hr { border: 0; height: 1px; background: var(--slate-200); margin: 2.5em 0; }
+
+/* =============================================================================
+   SECTION 7. RESPONSIVE MEDIA QUERIES (WEB)
+   ============================================================================= */
+@media screen and (max-width: 1024px) {
+    :root { --sidebar-w: 100%; }
+    .workspace { flex-direction: column; }
+    .brand-text, .icon-btn.primary span { display: none; }
+    .view-switch { display: flex; }
+    .editor, .preview { width: 100%; max-width: 100%; }
+    
+    body.mode-edit .preview { display: none !important; }
+    body.mode-preview .editor { display: none !important; }
+    
+    .editor textarea { padding: 1.5rem; }
+}
+
+@media screen and (max-width: 600px) {
+    .header { padding: 0 1rem; }
+    .icon-btn { width: 38px; height: 38px; font-size: 0.95rem; }
+    .preview { padding: 1rem; }
+}
+
+/* =============================================================================
+   SECTION 8. PERFECT PRINT & PDF VECTOR EXPORT ENGINE
+   ============================================================================= */
+@media print {
+    :root {
+        /* Force light theme variables for PDF export */
+        --md-code-bg: var(--slate-100);
+        --md-quote-bg: var(--slate-50);
+        --md-table-head: var(--slate-50);
+        --md-table-border: var(--slate-200);
+    }
+
+    @page {
+        size: auto; 
+        margin: var(--a4-margin); 
+    }
+
+    html, body {
+        background: #ffffff !important;
+        height: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: auto !important;
+        overflow: visible !important; 
+        padding: 0 !important;
+        margin: 0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Strip all App UI */
+    .header, .editor, .toast, .controls, .view-switch { 
+        display: none !important; 
+    }
+
+    /* Expand Workspace & Preview to natural flow */
+    .workspace, .preview { 
+        display: block !important; 
+        width: 100% !important; 
+        height: auto !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        background: transparent !important; 
+        overflow: visible !important;
+    }
+
+    /* Reformat Paper for pure PDF output */
+    .markdown-paper { 
+        margin: 0 !important; 
+        padding: 0 !important; 
+        box-shadow: none !important; 
+        transform: none !important; 
+        width: 100% !important; 
+        max-width: 100% !important;
+        border: none !important;
+        border-radius: 0 !important;
+        min-height: auto !important;
+    }
+
+    .markdown-paper, 
+    .markdown-paper pre, 
+    .markdown-paper code, 
+    .markdown-paper blockquote, 
+    .markdown-paper th {
+        /* Force browsers to render background graphics */
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important; 
+    }
+    
+    .markdown-paper pre {
+        background-color: var(--md-code-bg) !important;
+        color: var(--slate-900) !important; /* Dark text for code */
+    }
+
+    .markdown-paper code {
+        background-color: var(--md-code-bg) !important;
+    }
+
+    /* Smart Pagination: Prevent cut-offs */
+    .markdown-paper h1, .markdown-paper h2, .markdown-paper h3, .markdown-paper h4, .markdown-paper h5 {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .markdown-paper pre, .markdown-paper blockquote, .markdown-paper table, 
+    .markdown-paper tr, .markdown-paper img, .markdown-paper ul, 
+    .markdown-paper ol, .markdown-paper li {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* Prevent single trailing lines */
+    .markdown-paper p { 
+        orphans: 3; 
+        widows: 3; 
+    }
+}
